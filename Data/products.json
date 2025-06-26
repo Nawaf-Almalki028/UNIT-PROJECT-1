@@ -1,0 +1,10 @@
+{
+  "Dedicated":{
+    "location": "EU",
+    "core": 32,
+    "threads":  64,
+    "memory": 256,
+    "storage":  4096,
+    "ip_addresses":  16
+  }
+}

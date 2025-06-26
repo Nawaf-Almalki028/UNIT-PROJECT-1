@@ -1,0 +1,21 @@
+{
+  "users":{
+    "user_id":{
+      "username": "Nawaf123",
+      "firstname": "nawaf",
+      "lastname": "almalki",
+      "date_of_create": "2025-6-27",
+      "password": "************",
+      "email": "nawaf@gmail.com",
+      "phone_number": "+96650000000"
+      
+    }
+  },
+  "Blacklist":{
+    "user_id":{
+      "reason":"wrong use",
+      "time":864000
+    }
+      
+    }
+}
