@@ -8,17 +8,16 @@ art.tprint("TQ Hosting")
 
 print(Fore.GREEN + """
 -------------------------------------------
-
-        This is only for testing!
-
+        you can use this cli as you like!
 -------------------------------------------
 """)
 
 while True:
 
-  cli_command = input("==> ")
+  cli_command = input(Fore.YELLOW + "==> ")
+  cli_command = cli_command.lower()
 
-  cli_analysis(cli_command)
+  cli_analysis(cli_command,"guest")
 
 
 

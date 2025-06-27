@@ -13,8 +13,7 @@
   },
   "Blacklist":{
     "user_id":{
-      "reason":"wrong use",
-      "time":864000
+      "reason":"wrong use"
     }
       
     }
