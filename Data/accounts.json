@@ -1,20 +1,29 @@
 {
-  "users":{
-    "user_id":{
-      "username": "Nawaf123",
-      "firstname": "nawaf",
-      "lastname": "almalki",
-      "date_of_create": "2025-6-27",
-      "password": "************",
-      "email": "nawaf@gmail.com",
-      "phone_number": "+96650000000"
-      
+  "users": {
+    "user_id": {
+      "username": "nawaf998",
+      "firstname": "1",
+      "lastname": "1",
+      "permission": "customer",
+      "date_of_create": 1,
+      "password": "123",
+      "email": "1"
+    },
+    "user_id1": {
+      "user_id": {
+        "username": "gazy12",
+        "firstname": "123",
+        "lastname": "1",
+        "permission": "customer",
+        "date_of_create": 1,
+        "password": "123",
+        "email": "3"
+      }
     }
   },
-  "Blacklist":{
-    "user_id":{
-      "reason":"wrong use"
+  "Blacklist": {
+    "user_id": {
+      "reason": "wrong use"
     }
-      
-    }
+  }
 }

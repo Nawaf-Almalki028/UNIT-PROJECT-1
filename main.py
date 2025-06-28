@@ -1,5 +1,5 @@
-from        Functions.cli_operators   import      cli_analysis
-from        colorama                  import      Fore
+from        Classes.cli_operators   import      CliHandler
+from        colorama                import      Fore
 import      art
 import      time
 
@@ -12,12 +12,12 @@ print(Fore.GREEN + """
 -------------------------------------------
 """)
 
+person_information = CliHandler('',"guest")
+
 while True:
-
   cli_command = input(Fore.YELLOW + "==> ")
-  cli_command = cli_command.lower()
-
-  cli_analysis(cli_command,"guest")
+  person_information.command_entered = cli_command
+  person_information.cli_analysis()
 
 
 
