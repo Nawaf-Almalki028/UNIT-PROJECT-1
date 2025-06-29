@@ -19,7 +19,7 @@ class CliHandler():
                   "email","orders","support","logs","logout"],
                   
       "administrator":["help","dashboard","products","cart","mails",
-                  "email","users","reports","logs","logout"]
+                  "email","users","tickets","logs","logout"]
     }
 
   def cli_analysis(self):
@@ -60,6 +60,10 @@ class CliHandler():
     elif "cart pay" == self.command_entered and "cart" in self.__commands[self.__permission]:
       self.cmd_cart_handlers("pay")
 
+    elif "dashboard" == self.command_entered and "cart" in self.__commands[self.__permission]:
+      self.cmd_cart_handlers("pay")
+
+
     else:
       similar_word_process = similar_words_handler(self.command_entered,self.__commands[self.__permission])
       if similar_word_process[0] and similar_word_process[2] > 50:
@@ -71,25 +75,88 @@ class CliHandler():
 
   def cmd_cart_handlers(self,option):
     if option == 'show':
-      print(f"You have this items: ")
-      for index,item_on_cart in enumerate(self.cart):
-        print(f"🛒 :{index}- {item_on_cart}, {self.cart}")
+      all_cost = 0
+      print(Fore.GREEN + f"You have this items: ")
+      for category, items in self.cart.items():
+        for item_name,info in items.items():
+          print(f"🛒 - {category} / {item_name}: Quantity: {info['quantity']} Price ${info['price']}")
+          all_cost = all_cost + (info['price'] * info['quantity'])
+      print(Fore.CYAN + f"Total Price: {round(all_cost,2)}")
 
     elif option == 'add':
-      cartitem = input(f"{Fore.GREEN}CartSystem: Enter item name to add: ")
+      cart_item = input(f"{Fore.GREEN}CartSystem: Enter item name to add: ")
+      cart_item = cart_item.upper()
       items = read_json("products")
-      for catageory in ["VPS","VDS","GameServer"]:
-        for item in items[catageory]:
-          if item == cartitem:
-            print("done")
-            self.cart[catageory]=(item,items[catageory][item]["price"])
+      categories = ["VPS","VDS","GAMESERVER"]
+      for category in categories:
+        if category in items:
+          for item_name, item_info in items[category].items():
+            if cart_item == item_name:
+              if category not in self.cart:
+                self.cart[category] = {}
+              if item_name in self.cart[category]:
+                self.cart[category][item_name]["quantity"] += 1
+              else:
+                self.cart[category][item_name] = {"price":item_info["price"],"quantity":1}
 
     elif option == 'remove':
-      cartitem = input(f"{Fore.GREEN}CartSystem: Enter item name to remove: ")
-      print(self.cart)
+      cart_item = input(f"{Fore.GREEN}CartSystem: Enter item name to remove: ")
+      cart_item = cart_item.upper()
+      for category in list(self.cart.keys()):
+        if cart_item in self.cart[category]:
+          if self.cart[category][cart_item]["quantity"] > 1:
+            self.cart[category][cart_item]["quantity"] -= 1
+          else:
+            del self.cart[category][cart_item]
 
     elif option == 'pay':
-      print(self.cart)
+      if self.__permission == 'guest':
+        print(Fore.RED + "You need to signin first!")
+      else:
+        print(f"Payment Methods: \nVISA\nPayPal\nMada")
+        servers = read_json("servers")
+        last_server_number = 0
+        if self.__user_id in servers["VServers"]:
+            for server_id in servers["VServers"][self.__user_id]:
+                last_server_number = int(server_id[-4:])
+        last_server_number += 1
+        new_server_id = f"VServer#{str(last_server_number)}"
+
+        for type_server in self.cart:
+          for value in self.cart[type_server]:
+            print(value)
+        # print(self.cart)
+
+        # servers["VServers"][self.__user_id] = {
+        #   new_server_id:{
+        #     "type:"
+        #   }
+        # }
+        
+    # data["users"][user_id] = {
+    #     "username":username,
+    #     "firstname":firstname,
+    #     "lastname":lastname,
+    #     'permission':'customer',
+    #     'date_of_create':1,
+    #     "password":password1,
+    #     'email':email}
+    # "VServers":{
+    #   "id_HT2":{
+    #     "VServer#001": {
+    #       "type": "VPS-S",
+    #       "location": "EU",
+    #       "core": 2,
+    #       "threads": 4,
+    #       "memory": 4,
+    #       "storage":  50,
+    #       "ip_addresses": 1,
+    #       "date": "0",
+    #       "status": true,
+    #       "price": 5.99
+    #     }
+    #   }
+    # }
 
   def cmd_help_handlers(self):
 
@@ -109,13 +176,13 @@ class CliHandler():
     products_data = read_json("products")
     if "vps" in self.command_entered:
       for vps in products_data["VPS"]:
-        print(f"Plan: {vps}: Core: {products_data['VPS'][vps]['core']}, Memory: {products_data['VPS'][vps]['memory']}, Storage: {products_data['VPS'][vps]['storage']}GB, IP Address: {products_data['VPS'][vps]['ip_address']}, Price: ${products_data['VPS'][vps]['price']}.")
+        print(f"{Fore.CYAN}Plan: {vps}: Core: {products_data['VPS'][vps]['core']}, Memory: {products_data['VPS'][vps]['memory']}, Storage: {products_data['VPS'][vps]['storage']}GB, IP Address: {products_data['VPS'][vps]['ip_address']}, Price: ${products_data['VPS'][vps]['price']}.")
     elif "vds" in self.command_entered:
       for vds in products_data["VDS"]:
-        print(f"Plan: {vds}: Core: {products_data['VDS'][vds]['core']}, Memory: {products_data['VDS'][vds]['memory']}, Storage: {products_data['VDS'][vds]['storage']}GB, IP Address: {products_data['VDS'][vds]['ip_address']}, Price: ${products_data['VDS'][vds]['price']}.")
+        print(f"{Fore.CYAN}Plan: {vds}: Core: {products_data['VDS'][vds]['core']}, Memory: {products_data['VDS'][vds]['memory']}, Storage: {products_data['VDS'][vds]['storage']}GB, IP Address: {products_data['VDS'][vds]['ip_address']}, Price: ${products_data['VDS'][vds]['price']}.")
     elif "gameserver" in self.command_entered:
       for gameserver in products_data["GameServer"]:
-        print(f"Plan: {gameserver}: Players: {products_data['GameServer'][gameserver]['players']} Memory: {products_data['GameServer'][gameserver]['memory']}, Storage: {products_data['GameServer'][gameserver]['storage']}GB, Price: ${products_data['GameServer'][gameserver]['price']}.")
+        print(f"{Fore.CYAN}Plan: {gameserver}: Players: {products_data['GameServer'][gameserver]['players']} Memory: {products_data['GameServer'][gameserver]['memory']}, Storage: {products_data['GameServer'][gameserver]['storage']}GB, Price: ${products_data['GameServer'][gameserver]['price']}.")
 
       
       game_server = products_data['GameServer']
@@ -144,7 +211,7 @@ class CliHandler():
           self.__password = hashed_password
           self.__permission = data['users'][id]['permission']
           self.__email = data['users'][id]['email']
-          self.__user_id = data['users'][id]
+          self.__user_id = id
           self.date_of_create = data['users'][id]['date_of_create']
           return True
         else:

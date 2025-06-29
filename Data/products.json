@@ -1,12 +1,4 @@
 {
-  "Dedicated":{
-    "location": "EU",
-    "core": 32,
-    "threads":  64,
-    "memory": 256,
-    "storage":  4096,
-    "ip_addresses":  16
-  },
   "VPS":{
     "VPS-S":{
       "core":2,
@@ -53,20 +45,20 @@
       "price":40.99
     }
   },
-  "GameServer":{
-    "GameServer-S":{
+  "GAMESERVER":{
+    "GAMESERVER-S":{
       "players":16,
       "memory":3,
       "storage":20,
       "price":3.99
     },
-    "GameServer-L":{
+    "GAMESERVER-L":{
       "players":32,
       "memory":6,
       "storage":40,
       "price":7.99
     },
-    "GameServer-XL":{
+    "GAMESERVER-XL":{
       "players":64,
       "memory":8,
       "storage":60,
