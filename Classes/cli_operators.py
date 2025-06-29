@@ -10,6 +10,7 @@ class CliHandler():
     self.command_entered = command_entered
     self.__permission = permission
     self.account_id = account_id
+    self.cart = {}
 
     self.__commands = {
       "guest":["help","signin","signup","products","cart"],
@@ -41,11 +42,23 @@ class CliHandler():
     elif "logout" == self.command_entered and "logout" in self.__commands[self.__permission]:
       self.auth_handler("logout")
 
-    elif "product" == self.command_entered:
+    elif "products" in self.command_entered:
       self.cmd_products_handlers()
 
     elif "cart" == self.command_entered and "cart" in self.__commands[self.__permission]:
-      self.cmd_cart_handlers()
+      print(f"{Fore.RED}type {Fore.WHITE}cart {Fore.CYAN}(add,remove,show,pay)")
+
+    elif "cart show" == self.command_entered and "cart" in self.__commands[self.__permission]:
+      self.cmd_cart_handlers("show")
+
+    elif "cart add" == self.command_entered and "cart" in self.__commands[self.__permission]:
+      self.cmd_cart_handlers("add")
+
+    elif "cart remove" == self.command_entered and "cart" in self.__commands[self.__permission]:
+      self.cmd_cart_handlers("remove")
+
+    elif "cart pay" == self.command_entered and "cart" in self.__commands[self.__permission]:
+      self.cmd_cart_handlers("pay")
 
     else:
       similar_word_process = similar_words_handler(self.command_entered,self.__commands[self.__permission])
@@ -55,6 +68,28 @@ class CliHandler():
         print(f"{Fore.RED}there isn't any command like that")
         print(f"{Fore.RED}type {Fore.WHITE}(help) {Fore.RED}to see other commands")
 
+
+  def cmd_cart_handlers(self,option):
+    if option == 'show':
+      print(f"You have this items: ")
+      for index,item_on_cart in enumerate(self.cart):
+        print(f"🛒 :{index}- {item_on_cart}, {self.cart}")
+
+    elif option == 'add':
+      cartitem = input(f"{Fore.GREEN}CartSystem: Enter item name to add: ")
+      items = read_json("products")
+      for catageory in ["VPS","VDS","GameServer"]:
+        for item in items[catageory]:
+          if item == cartitem:
+            print("done")
+            self.cart[catageory]=(item,items[catageory][item]["price"])
+
+    elif option == 'remove':
+      cartitem = input(f"{Fore.GREEN}CartSystem: Enter item name to remove: ")
+      print(self.cart)
+
+    elif option == 'pay':
+      print(self.cart)
 
   def cmd_help_handlers(self):
 
@@ -71,7 +106,22 @@ class CliHandler():
       print("Something went wrong contact us!")
 
   def cmd_products_handlers(self):
-    print("you have these products")
+    products_data = read_json("products")
+    if "vps" in self.command_entered:
+      for vps in products_data["VPS"]:
+        print(f"Plan: {vps}: Core: {products_data['VPS'][vps]['core']}, Memory: {products_data['VPS'][vps]['memory']}, Storage: {products_data['VPS'][vps]['storage']}GB, IP Address: {products_data['VPS'][vps]['ip_address']}, Price: ${products_data['VPS'][vps]['price']}.")
+    elif "vds" in self.command_entered:
+      for vds in products_data["VDS"]:
+        print(f"Plan: {vds}: Core: {products_data['VDS'][vds]['core']}, Memory: {products_data['VDS'][vds]['memory']}, Storage: {products_data['VDS'][vds]['storage']}GB, IP Address: {products_data['VDS'][vds]['ip_address']}, Price: ${products_data['VDS'][vds]['price']}.")
+    elif "gameserver" in self.command_entered:
+      for gameserver in products_data["GameServer"]:
+        print(f"Plan: {gameserver}: Players: {products_data['GameServer'][gameserver]['players']} Memory: {products_data['GameServer'][gameserver]['memory']}, Storage: {products_data['GameServer'][gameserver]['storage']}GB, Price: ${products_data['GameServer'][gameserver]['price']}.")
+
+      
+      game_server = products_data['GameServer']
+    else:
+      print(f"{Fore.RED}type {Fore.WHITE}products {Fore.CYAN}(vps,vds,gameserver)")
+
 
   def auth_hash_password(self,password_to_hash):
     return sha256(password_to_hash.encode()).hexdigest()
@@ -98,40 +148,51 @@ class CliHandler():
           self.date_of_create = data['users'][id]['date_of_create']
           return True
         else:
-          return False
+          continue
 
     elif authentecation_option == "signup":
       username = input(f"{Fore.RED} AuthSystem: Enter your username:{Fore.YELLOW} ")
       password1 = input(f"{Fore.RED} AuthSystem: Enter your password:{Fore.YELLOW} ")
       password2 = input(f"{Fore.RED} AuthSystem: Repeat your password:{Fore.YELLOW} ")
 
-      if len(username) > 5:
+      if len(username) > 3:
         if username and username[0].isalpha():
-          if password1 == password2:
+          if password1 == password2 and len(password1) > 4:
             firstname = input(f"{Fore.RED} AuthSystem: Enter your firstname:{Fore.YELLOW} ")
             lastname = input(f"{Fore.RED} AuthSystem: Enter your lastname:{Fore.YELLOW} ")
             email = input(f"{Fore.RED} AuthSystem: Enter your email:{Fore.YELLOW} ")
+
+            if email.endswith("@gmail.com") or email.endswith("@hotmail.com"):
+              pass
+            else:
+              print(f"{Fore.RED} AuthSystem: we only support mails from gmail and hotmail")
+              return False
+
+            password1 = self.auth_hash_password(password1)
+
+            for index,id in enumerate(data['users']):
+              user_id = f'id_HT{index+1}'
+
             
-            data["users"]['user_id1'] = {
-              "user_id":{
+            data["users"][user_id] = {
                 "username":username,
                 "firstname":firstname,
                 "lastname":lastname,
                 'permission':'customer',
                 'date_of_create':1,
                 "password":password1,
-                'email':email}}
+                'email':email}
             
             self.username = username
             
             write_json("accounts",data)
             return True
           else:
-            print("password dosen't match")
+            print(f"{Fore.RED} AuthSystem: password dosen't match or two short!")
         else:
-          print("username should start with chars only")
+          print(f"{Fore.RED} AuthSystem: username should start with chars only")
       else:
-        print("username is two short need to be at least 4 chars")
+        print(f"{Fore.RED} AuthSystem: username is two short need to be at least 4 chars")
 
 
     elif authentecation_option == "logout":
@@ -145,6 +206,7 @@ class CliHandler():
         self.__email = None
         self.__user_id = None
         self.date_of_create = None
+        self.cart = {}
       else:
         print(f"{Fore.RED} AuthSystem:  You cancel it.")
 

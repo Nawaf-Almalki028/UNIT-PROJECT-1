@@ -6,19 +6,26 @@
       "lastname": "1",
       "permission": "customer",
       "date_of_create": 1,
-      "password": "123",
+      "password": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
       "email": "1"
     },
     "user_id1": {
-      "user_id": {
-        "username": "gazy12",
-        "firstname": "123",
-        "lastname": "1",
-        "permission": "customer",
-        "date_of_create": 1,
-        "password": "123",
-        "email": "3"
-      }
+      "username": "nawaf12",
+      "firstname": "n",
+      "lastname": "a",
+      "permission": "customer",
+      "date_of_create": 1,
+      "password": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+      "email": "a"
+    },
+    "id_HT2": {
+      "username": "nawaf01",
+      "firstname": "nawaf",
+      "lastname": "kamal",
+      "permission": "customer",
+      "date_of_create": 1,
+      "password": "8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414",
+      "email": "xp@gmail.com"
     }
   },
   "Blacklist": {
