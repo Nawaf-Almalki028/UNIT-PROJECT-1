@@ -1,25 +1,28 @@
 from        Functions.cli_messages          import      menu_msg_handler
 from        Functions.similar_words         import      similar_words_handler
 from        Functions.json_handlers         import      read_json,write_json
+from        datetime                        import      datetime
 from        hashlib                         import      sha256
 from        colorama                        import      Fore
+from        maskpass                        import      askpass
 
 class CliHandler():
-  def __init__(self, command_entered, permission='guest', account_id="0"):
+  def __init__(self, command_entered, permission='guest', account_id="0",balance = 0):
 
     self.command_entered = command_entered
     self.__permission = permission
-    self.account_id = account_id
+    self.__account_id = account_id
+    self.__balance = balance
     self.cart = {}
 
     self.__commands = {
       "guest":["help","signin","signup","products","cart"],
 
-      "customer":["help","dashboard","products","cart","mails",
-                  "email","orders","support","logs","logout"],
+      "customer":["help","dashboard","products","cart","tickets",
+                  "orders","logs","logout"],
                   
-      "administrator":["help","dashboard","products","cart","mails",
-                  "email","users","tickets","logs","logout"]
+      "administrator":["admincmd","help","dashboard","products","cart","users",
+                  "logs","tickets","logs","logout"]
     }
 
   def cli_analysis(self):
@@ -60,8 +63,34 @@ class CliHandler():
     elif "cart pay" == self.command_entered and "cart" in self.__commands[self.__permission]:
       self.cmd_cart_handlers("pay")
 
-    elif "dashboard" == self.command_entered and "cart" in self.__commands[self.__permission]:
-      self.cmd_cart_handlers("pay")
+    elif "dashboard" == self.command_entered and "dashboard" in self.__commands[self.__permission]:
+      print(f"{Fore.RED}type {Fore.WHITE}dashboard {Fore.CYAN}(show,services,start,stop,refund)")
+
+    elif "dashboard show" == self.command_entered and "dashboard" in self.__commands[self.__permission]:
+      self.cmd_dashboard_handlers("show")
+
+    elif "dashboard services" == self.command_entered and "dashboard" in self.__commands[self.__permission]:
+      self.cmd_dashboard_handlers("services")
+
+    elif "dashboard start" == self.command_entered and "dashboard" in self.__commands[self.__permission]:
+      self.cmd_dashboard_handlers("start")
+
+    elif "dashboard stop" == self.command_entered and "dashboard" in self.__commands[self.__permission]:
+      self.cmd_dashboard_handlers("stop")
+
+    elif "dashboard refund" == self.command_entered and "dashboard" in self.__commands[self.__permission]:
+      self.cmd_dashboard_handlers("refund")
+
+    elif "tickets" == self.command_entered and "tickets" in self.__commands[self.__permission]:
+      self.cmd_cart_handlers("show")
+
+    elif "admincmd" == self.command_entered and "admincmd" in self.__commands[self.__permission]:
+      print(f"{Fore.RED}type {Fore.WHITE}admincmd {Fore.CYAN}(ban,unban)")
+
+    elif "admincmd ban" == self.command_entered and "admincmd" in self.__commands[self.__permission]:
+      self.cmd_admincmd_handlers("ban")
+    elif "admincmd unban" == self.command_entered and "admincmd" in self.__commands[self.__permission]:
+      self.cmd_admincmd_handlers("unban")
 
 
     else:
@@ -72,6 +101,52 @@ class CliHandler():
         print(f"{Fore.RED}there isn't any command like that")
         print(f"{Fore.RED}type {Fore.WHITE}(help) {Fore.RED}to see other commands")
 
+  def cmd_admincmd_handlers(self,option):
+    read_account = read_json("accounts")
+
+    enter_userid = input(f"{Fore.RED}AdminCMD: Enter user_id: ")
+
+    if option == "ban":
+      reason = input(f"{Fore.RED}AdminCMD: Enter the reason: ")
+      if enter_userid not in read_account["Blacklist"]:
+        read_account["Blacklist"][enter_userid] = {
+          "reason":reason
+        }
+        write_json("accounts",read_account)
+    if option == "unban":
+      if enter_userid in read_account["Blacklist"]:
+        del read_account["Blacklist"][enter_userid]
+        write_json("accounts",read_account)
+
+  def cmd_dashboard_handlers(self,option):
+    dashboard_data1 = read_json("accounts")
+    servers_data1 = read_json("servers")
+    if option == "show":
+      print(f"""
+ئ
+=============================
+  {self.__permission} DASHBOARD
+=============================
+{Fore.CYAN}Welcome,  {Fore.WHITE}{self.username}
+{Fore.CYAN}Your ID:  {Fore.WHITE}{self.__account_id}
+{Fore.CYAN}Member since,  {Fore.WHITE}{self.date_of_create}
+{Fore.CYAN}Your Full Name: {Fore.WHITE}{dashboard_data1["users"][self.__account_id]["firstname"]}, {dashboard_data1["users"][self.__account_id]["lastname"]}
+{Fore.CYAN}Your Permission: {Fore.WHITE}{self.__permission}
+{Fore.CYAN}Your Email: {Fore.WHITE}{self.__email}
+{Fore.CYAN}Your Balance: {Fore.GREEN}${self.__balance}
+"""
+)
+    if option == "services":
+      if self.__account_id in servers_data1["VServers"]:
+        for service in servers_data1["VServers"][self.__account_id]:
+          data_short = servers_data1["VServers"][self.__account_id][service]
+          status = "Not Active"
+          print()
+          if data_short['status']:
+            status = 'Active'
+          print(f"{service} Type: {data_short['type']}, Location {data_short['location']}, Status: {status}")
+      else:
+        print("you dont have services!")
 
   def cmd_cart_handlers(self,option):
     if option == 'show':
@@ -81,7 +156,8 @@ class CliHandler():
         for item_name,info in items.items():
           print(f"🛒 - {category} / {item_name}: Quantity: {info['quantity']} Price ${info['price']}")
           all_cost = all_cost + (info['price'] * info['quantity'])
-      print(Fore.CYAN + f"Total Price: {round(all_cost,2)}")
+      print(Fore.CYAN + f"Total Price: ${round(all_cost,2)}")
+      print(Fore.GREEN + f"Your Balance ${self.__balance}")
 
     elif option == 'add':
       cart_item = input(f"{Fore.GREEN}CartSystem: Enter item name to add: ")
@@ -116,8 +192,8 @@ class CliHandler():
         print(f"Payment Methods: \nVISA\nPayPal\nMada")
         servers = read_json("servers")
         last_server_number = 0
-        if self.__user_id in servers["VServers"]:
-            for server_id in servers["VServers"][self.__user_id]:
+        if self.__account_id in servers["VServers"]:
+            for server_id in servers["VServers"][self.__account_id]:
                 last_server_number = int(server_id[-4:])
         last_server_number += 1
         new_server_id = f"VServer#{str(last_server_number)}"
@@ -125,38 +201,6 @@ class CliHandler():
         for type_server in self.cart:
           for value in self.cart[type_server]:
             print(value)
-        # print(self.cart)
-
-        # servers["VServers"][self.__user_id] = {
-        #   new_server_id:{
-        #     "type:"
-        #   }
-        # }
-        
-    # data["users"][user_id] = {
-    #     "username":username,
-    #     "firstname":firstname,
-    #     "lastname":lastname,
-    #     'permission':'customer',
-    #     'date_of_create':1,
-    #     "password":password1,
-    #     'email':email}
-    # "VServers":{
-    #   "id_HT2":{
-    #     "VServer#001": {
-    #       "type": "VPS-S",
-    #       "location": "EU",
-    #       "core": 2,
-    #       "threads": 4,
-    #       "memory": 4,
-    #       "storage":  50,
-    #       "ip_addresses": 1,
-    #       "date": "0",
-    #       "status": true,
-    #       "price": 5.99
-    #     }
-    #   }
-    # }
 
   def cmd_help_handlers(self):
 
@@ -181,11 +225,9 @@ class CliHandler():
       for vds in products_data["VDS"]:
         print(f"{Fore.CYAN}Plan: {vds}: Core: {products_data['VDS'][vds]['core']}, Memory: {products_data['VDS'][vds]['memory']}, Storage: {products_data['VDS'][vds]['storage']}GB, IP Address: {products_data['VDS'][vds]['ip_address']}, Price: ${products_data['VDS'][vds]['price']}.")
     elif "gameserver" in self.command_entered:
-      for gameserver in products_data["GameServer"]:
-        print(f"{Fore.CYAN}Plan: {gameserver}: Players: {products_data['GameServer'][gameserver]['players']} Memory: {products_data['GameServer'][gameserver]['memory']}, Storage: {products_data['GameServer'][gameserver]['storage']}GB, Price: ${products_data['GameServer'][gameserver]['price']}.")
+      for gameserver in products_data["GAMESERVER"]:
+        print(f"{Fore.CYAN}Plan: {gameserver}: Players: {products_data['GAMESERVER'][gameserver]['players']} Memory: {products_data['GAMESERVER'][gameserver]['memory']}, Storage: {products_data['GAMESERVER'][gameserver]['storage']}GB, Price: ${products_data['GAMESERVER'][gameserver]['price']}.")
 
-      
-      game_server = products_data['GameServer']
     else:
       print(f"{Fore.RED}type {Fore.WHITE}products {Fore.CYAN}(vps,vds,gameserver)")
 
@@ -198,24 +240,29 @@ class CliHandler():
     data = read_json("accounts")
     if authentecation_option == "signin":
       entered_username = input(f"{Fore.RED} AuthSystem: Enter your username:{Fore.YELLOW} ")
-      entered_password = input(f"{Fore.RED} AuthSystem: Enter your password:{Fore.YELLOW} ")
+      entered_password = askpass(f"{Fore.RED} AuthSystem: Enter your password:{Fore.YELLOW} ")
       hashed_password = self.auth_hash_password(entered_password)
       
       entered_username = entered_username.lower()
 
       for id in data['users']:
         if data['users'][id]['username'] == entered_username and data['users'][id]['password'] == hashed_password:
-          self.username = entered_username
-          self.firstname = data['users'][id]['firstname']
-          self.lastname = data['users'][id]['lastname']
-          self.__password = hashed_password
-          self.__permission = data['users'][id]['permission']
-          self.__email = data['users'][id]['email']
-          self.__user_id = id
-          self.date_of_create = data['users'][id]['date_of_create']
-          return True
-        else:
-          continue
+          if id in data["Blacklist"]:
+            reason = data["Blacklist"][id]["reason"]
+            print(f"{Fore.RED} AuthSystem: You are Banned: Reason: {Fore.WHITE + reason}")
+          elif id not in data["Blacklist"]:
+            self.username = entered_username
+            self.firstname = data['users'][id]['firstname']
+            self.lastname = data['users'][id]['lastname']
+            self.__password = hashed_password
+            self.__permission = data['users'][id]['permission']
+            self.__email = data['users'][id]['email']
+            self.__account_id = id
+            self.date_of_create = data['users'][id]['dateofcreate']
+            self.__balance = data['users'][id]['balance']
+            return True
+          else:
+            print("something went wrong")
 
     elif authentecation_option == "signup":
       username = input(f"{Fore.RED} AuthSystem: Enter your username:{Fore.YELLOW} ")
@@ -240,13 +287,14 @@ class CliHandler():
             for index,id in enumerate(data['users']):
               user_id = f'id_HT{index+1}'
 
-            
+            date_now = datetime.now().strftime("%Y-%m-%d,%H:%M:%S")
             data["users"][user_id] = {
                 "username":username,
                 "firstname":firstname,
                 "lastname":lastname,
                 'permission':'customer',
-                'date_of_create':1,
+                'dateofcreate':date_now,
+                'balance': 0,
                 "password":password1,
                 'email':email}
             
@@ -271,17 +319,10 @@ class CliHandler():
         self.__password = None
         self.__permission = 'guest'
         self.__email = None
-        self.__user_id = None
+        self.__account_id = None
         self.date_of_create = None
+        self.__balance = 0
         self.cart = {}
       else:
         print(f"{Fore.RED} AuthSystem:  You cancel it.")
 
-
-
-  def basket_handler(self):
-    print("this for basket")
-
-
-  def payment_handler(self):
-    print("this for payment")

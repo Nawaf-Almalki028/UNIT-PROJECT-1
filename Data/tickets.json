@@ -1,0 +1,17 @@
+{
+    "tickets":{
+        "ticket_10001":{
+            "status": true,
+            "title": "ticket title",
+            "priority": "hight",
+            "messages": {
+                "date":{
+                    "staff":{
+                        "nawaf01":"so what the issue"
+                    }
+                }
+            }
+
+        }
+    }
+}

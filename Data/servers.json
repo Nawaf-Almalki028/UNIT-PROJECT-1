@@ -22,6 +22,18 @@
         "date": "0",
         "status": true,
         "price": 5.99
+      },
+      "VServer#1002": {
+        "type": "VPS-L",
+        "location": "EU",
+        "core": 2,
+        "threads": 4,
+        "memory": 4,
+        "storage":  50,
+        "ip_addresses": 1,
+        "date": "0",
+        "status": true,
+        "price": 5.99
       }
     }
   }
