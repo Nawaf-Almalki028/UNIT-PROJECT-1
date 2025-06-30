@@ -1,40 +1,12 @@
 {
-  "Dedicateds":{
-    "Dedicated_01":{
+  "Dedicateds": {
+    "Dedicated_01": {
       "location": "EU",
       "core": 32,
-      "threads":  64,
+      "threads": 64,
       "memory": 256,
-      "storage":  4096,
-      "ip_addresses":  16
-    }
-  },
-  "VServers":{
-    "id_HT2":{
-      "VServer#1001": {
-        "type": "VPS-S",
-        "location": "EU",
-        "core": 2,
-        "threads": 4,
-        "memory": 4,
-        "storage":  50,
-        "ip_addresses": 1,
-        "date": "0",
-        "status": true,
-        "price": 5.99
-      },
-      "VServer#1002": {
-        "type": "VPS-L",
-        "location": "EU",
-        "core": 2,
-        "threads": 4,
-        "memory": 4,
-        "storage":  50,
-        "ip_addresses": 1,
-        "date": "0",
-        "status": true,
-        "price": 5.99
-      }
+      "storage": 4096,
+      "ip_addresses": 16
     }
   }
 }

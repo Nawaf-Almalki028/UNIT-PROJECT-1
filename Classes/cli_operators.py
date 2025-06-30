@@ -148,16 +148,24 @@ class CliHandler():
       else:
         print("you dont have services!")
 
+  def cmd_get_cart_cost(self):
+    all_cost = 0
+    for category, items in self.cart.items():
+        for item_name,info in items.items():
+          all_cost += (info['price'] * info['quantity'])
+    return round(all_cost,2)
+
   def cmd_cart_handlers(self,option):
+    Servers = read_json("servers")
     if option == 'show':
-      all_cost = 0
       print(Fore.GREEN + f"You have this items: ")
       for category, items in self.cart.items():
         for item_name,info in items.items():
           print(f"🛒 - {category} / {item_name}: Quantity: {info['quantity']} Price ${info['price']}")
-          all_cost = all_cost + (info['price'] * info['quantity'])
-      print(Fore.CYAN + f"Total Price: ${round(all_cost,2)}")
+      print(Fore.CYAN + f"Total Price: ${self.cmd_get_cart_cost()}")
+      print("==================================")
       print(Fore.GREEN + f"Your Balance ${self.__balance}")
+      print("==================================")
 
     elif option == 'add':
       cart_item = input(f"{Fore.GREEN}CartSystem: Enter item name to add: ")
@@ -189,18 +197,57 @@ class CliHandler():
       if self.__permission == 'guest':
         print(Fore.RED + "You need to signin first!")
       else:
-        print(f"Payment Methods: \nVISA\nPayPal\nMada")
-        servers = read_json("servers")
-        last_server_number = 0
-        if self.__account_id in servers["VServers"]:
+        if self.__balance >= self.cmd_get_cart_cost():
+          servers = read_json("servers")
+          products = read_json("products")
+          last_server_number = 1
+          if self.__account_id not in servers["VServers"]:
+            servers["VServers"][self.__account_id] = {}
+          try:
             for server_id in servers["VServers"][self.__account_id]:
-                last_server_number = int(server_id[-4:])
-        last_server_number += 1
-        new_server_id = f"VServer#{str(last_server_number)}"
+              last_server_number = int(server_id[-4:])
+          except:
+            last_server_number = 1000
+          date_now = datetime.now().strftime("%Y-%m-%d,%H:%M:%S")
+          for product_name,product_info in self.cart.items():
+            for name,info in product_info.items():
+              for i in range(info["quantity"]):
+                last_server_number += 1
+                if product_name != "GAMESERVER":
+                  servers["VServers"][self.__account_id][f"VServer#{last_server_number}"] = {
+                    "type": name,
+                    "location": "EU",
+                    "core": products[product_name][name]["core"],
+                    "memory": products[product_name][name]["memory"],
+                    "storage": products[product_name][name]["storage"],
+                    "ip_addresses": products[product_name][name]["ip_address"],
+                    "date": date_now,
+                    "status": True,
+                    "price": products[product_name][name]["price"]
+                  }
+                else:
+                  servers["VServers"][self.__account_id][f"VServer#{last_server_number}"] = {
+                    "type": name,
+                    "location": "EU",
+                    "players": products[product_name][name]["players"],
+                    "memory": products[product_name][name]["memory"],
+                    "storage": products[product_name][name]["storage"],
+                    "date": date_now,
+                    "status": True,
+                    "price": products[product_name][name]["price"]
+                  }
 
-        for type_server in self.cart:
-          for value in self.cart[type_server]:
-            print(value)
+          write_json("servers",servers)
+        else:
+          print(Fore.RED + "You dont have this amount!")
+
+
+            # print(f"{name} {info['quantity']} has payd success!")
+            # VPS-S 1 has payd success!
+            # print(f"{product_name} {product_info} has payd success!")
+            # VPS {'VPS-S': {'price': 7.0, 'quantity': 1}} has payd success!
+            
+
 
   def cmd_help_handlers(self):
 
