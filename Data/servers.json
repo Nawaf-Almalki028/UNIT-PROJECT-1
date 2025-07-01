@@ -8,5 +8,68 @@
       "storage": 4096,
       "ip_addresses": 16
     }
+  },
+  "VServers": {
+    "id_HT2": {
+      "VServer#1001": {
+        "type": "VPS-S",
+        "location": "EU",
+        "core": 2,
+        "threads": 4,
+        "memory": 4,
+        "storage": 50,
+        "ip_addresses": 1,
+        "date": "0",
+        "status": true,
+        "price": 5.99
+      },
+      "VServer#1002": {
+        "type": "VPS-L",
+        "location": "EU",
+        "core": 2,
+        "threads": 4,
+        "memory": 4,
+        "storage": 50,
+        "ip_addresses": 1,
+        "date": "0",
+        "status": true,
+        "price": 5.99
+      },
+      "VServer#1003": {
+        "type": "VPS-L",
+        "location": "EU",
+        "core": 4,
+        "memory": 8,
+        "storage": 100,
+        "ip_addresses": 1,
+        "date": "2025-07-01,15:17:00",
+        "status": true,
+        "price": 12.99
+      }
+    },
+    "id_HT1": {
+      "VServer#1001": {
+        "type": "VPS-S",
+        "location": "EU",
+        "core": 2,
+        "memory": 4,
+        "storage": 50,
+        "ip_addresses": 1,
+        "date": "2025-07-01,12:50:12",
+        "status": true,
+        "price": 7.0
+      },
+      "VServer#1002": {
+        "type": "VPS-S",
+        "location": "EU",
+        "core": 2,
+        "memory": 4,
+        "storage": 50,
+        "ip_addresses": 1,
+        "date": "2025-07-01,12:50:12",
+        "status": true,
+        "price": 7.0
+      }
+    }
   }
 }

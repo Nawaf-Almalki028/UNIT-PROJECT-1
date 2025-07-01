@@ -8,7 +8,6 @@ def read_json(path):
     except Exception as ex:
        print(f"Something went wrong - Error: {ex}")
 
-
 def write_json(path, var):
     try:
         with open(f"./Data/{path}.json", "w") as f:

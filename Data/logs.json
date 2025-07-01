@@ -1,7 +1,56 @@
 {
-  "history": {
-    "name": "nawaf_almalki",
-    "2025-6-27 1:25": "returned amount to account $100",
-    "2025-6-27 1:21": "return vds-xl"
+  "userid": {
+    "date": "log"
+  },
+  "id_HT2": {
+    "2025-07-01,13:59:20": "You signed in",
+    "2025-07-01,13:59:21": "You typed this command: help",
+    "2025-07-01,14:03:41": "You typed this command: why",
+    "2025-07-01,14:06:54": "You typed this command: logs",
+    "2025-07-01,14:08:29": "You signed in",
+    "2025-07-01,14:08:31": "You typed this command: log",
+    "2025-07-01,14:08:33": "You typed this command: logs",
+    "2025-07-01,14:10:19": "You signed in",
+    "2025-07-01,14:10:20": "You typed this command: logs",
+    "2025-07-01,14:10:28": "You typed this command: r",
+    "2025-07-01,14:10:29": "You typed this command: w",
+    "2025-07-01,14:10:30": "You typed this command: logs",
+    "2025-07-01,14:11:06": "You typed this command: logs",
+    "2025-07-01,15:15:48": "You signed in",
+    "2025-07-01,15:15:50": "You typed this command: help",
+    "2025-07-01,15:15:59": "You typed this command: dashboard show",
+    "2025-07-01,15:16:20": "You typed this command: dashboard services",
+    "2025-07-01,15:16:32": "You showed your cart",
+    "2025-07-01,15:16:39": "You typed this command: cart pay",
+    "2025-07-01,15:16:44": "You typed this command: balance",
+    "2025-07-01,15:16:47": "You ask for showing your balance",
+    "2025-07-01,15:16:49": "You ask for add amount to your wallet",
+    "2025-07-01,15:16:55": "You ask for showing your balance",
+    "2025-07-01,15:17:00": "You bought gameserver",
+    "2025-07-01,15:17:05": "You typed this command: dashboard services",
+    "2025-07-01,15:17:13": "You typed this command: help",
+    "2025-07-01,15:17:35": "You typed this command: logs",
+    "2025-07-01,15:17:52": "You typed this command: logout",
+    "2025-07-01,15:17:53": "You signed out",
+    "2025-07-01,19:27:25": "You signed in",
+    "2025-07-01,19:27:37": "You typed this command: help",
+    "2025-07-01,19:27:48": "You typed this command: dashboard show",
+    "2025-07-01,19:28:02": "You typed this command: dashboard services",
+    "2025-07-01,19:28:52": "You typed this command: logs",
+    "2025-07-01,19:29:20": "You typed this command: help",
+    "2025-07-01,19:29:25": "You typed this command: balance",
+    "2025-07-01,19:29:27": "You ask for add amount to your wallet"
+  },
+  "id_HT1": {
+    "2025-07-01,14:06:20": "You typed this command: so",
+    "2025-07-01,14:06:21": "You typed this command: logs",
+    "2025-07-01,14:06:24": "You typed this command: log",
+    "2025-07-01,14:06:26": "You typed this command: logs",
+    "2025-07-01,14:11:55": "You signed in",
+    "2025-07-01,14:11:56": "You typed this command: help",
+    "2025-07-01,15:18:01": "You signed in",
+    "2025-07-01,15:18:03": "You typed this command: help",
+    "2025-07-01,15:18:34": "You typed this command: logs",
+    "2025-07-01,15:18:37": "You typed this command: logs"
   }
 }

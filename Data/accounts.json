@@ -6,7 +6,7 @@
       "lastname": "almalki",
       "permission": "customer",
       "dateofcreate": "2025-06-30,10:03:56",
-      "balance": 0,
+      "balance": 521.01,
       "password": "8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414",
       "email": "xp@gmail.com"
     },
@@ -16,7 +16,7 @@
       "lastname": "kama",
       "permission": "administrator",
       "dateofcreate": "2025-06-30,10:04:43",
-      "balance": 0,
+      "balance": 721.01,
       "password": "8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414",
       "email": "xxpp@gmail.com"
     }

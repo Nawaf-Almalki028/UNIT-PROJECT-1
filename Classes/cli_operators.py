@@ -16,90 +16,200 @@ class CliHandler():
     self.cart = {}
 
     self.__commands = {
-      "guest":["help","signin","signup","products","cart"],
+      "guest": [
+        "help", "signin", "signup",
+        "products", "products vps", "products vds", "products gameserver",
+        "cart", "cart show", "cart add", "cart remove", "cart pay"
+      ],
 
-      "customer":["help","dashboard","products","cart","tickets",
-                  "orders","logs","logout"],
-                  
-      "administrator":["admincmd","help","dashboard","products","cart","users",
-                  "logs","tickets","logs","logout"]
+      "customer": [
+        "help","balance","balance show","balance add",
+        "dashboard", "dashboard show", "dashboard services", "dashboard start", "dashboard stop",
+        "products", "products vps", "products vds", "products gameserver",
+        "cart", "cart show", "cart add", "cart remove", "cart pay",
+        "orders", "order show", "order refund",
+        "tickets", "tickets create", "tickets show", "tickets reply",
+        "logs",
+        "logout"
+      ],
+
+      "administrator": [
+        "help", "admincmd", "admincmd ban", "admincmd unban","balance","balance show","balance add",
+        "dashboard", "dashboard show", "dashboard services", "dashboard start", "dashboard stop",
+        "products", "products vps", "products vds", "products gameserver",
+        "cart", "cart show", "cart add", "cart remove", "cart pay",
+        "users", "users promote", "users demote",
+        "logs",
+        "tickets", "tickets show", "tickets reply", "tickets close",
+        "coupons", "coupon create", "coupon delete", "coupon show",
+        "logout"
+      ]
     }
 
   def cli_analysis(self):
 
-    if "help" in self.command_entered:
-      self.cmd_help_handlers()
-      
-    elif "signin" == self.command_entered and "signin" in self.__commands[self.__permission]:
-      if self.auth_handler("signin"):
-        print(f"{Fore.RED} AuthSystem:{Fore.GREEN} signin success!, welcome {Fore.YELLOW + self.username}")
+    self.cmd_logs_saves(f"You typed this command: {self.command_entered}")
+
+    match self.command_entered:
+      case _ if "help" in self.command_entered:
+          self.cmd_help_handlers()
+
+      case "signin" if "signin" in self.__commands[self.__permission]:
+          if self.auth_handler("signin"):
+              print(f"{Fore.RED} AuthSystem:{Fore.GREEN} signin success!, welcome {Fore.YELLOW + self.username}")
+          else:
+              print(f"{Fore.RED} AuthSystem: signin failed!")
+
+      case "signup" if "signup" in self.__commands[self.__permission]:
+          if self.auth_handler("signup"):
+              print(f"{Fore.RED} AuthSystem:{Fore.GREEN} signup success!, welcome {Fore.YELLOW + self.username}, please signin!")
+          else:
+              print(f"{Fore.RED} AuthSystem: signup failed!")
+
+      case "logout" if "logout" in self.__commands[self.__permission]:
+          self.auth_handler("logout")
+
+      case _ if "products" in self.command_entered:
+          self.cmd_products_handlers()
+
+      case "cart" if "cart" in self.__commands[self.__permission]:
+          print(f"{Fore.RED}type {Fore.WHITE}cart {Fore.CYAN}(add,remove,show,pay)")
+
+      case "cart show" if "cart" in self.__commands[self.__permission]:
+          self.cmd_cart_handlers("show")
+
+      case "cart add" if "cart" in self.__commands[self.__permission]:
+          self.cmd_cart_handlers("add")
+
+      case "cart remove" if "cart" in self.__commands[self.__permission]:
+          self.cmd_cart_handlers("remove")
+
+      case "cart pay" if "cart" in self.__commands[self.__permission]:
+          self.cmd_cart_handlers("pay")
+
+      case "dashboard" if "dashboard" in self.__commands[self.__permission]:
+          print(f"{Fore.RED}type {Fore.WHITE}dashboard {Fore.CYAN}(show,services,start,stop)")
+
+      case "dashboard show" if "dashboard" in self.__commands[self.__permission]:
+          self.cmd_dashboard_handlers("show")
+
+      case "dashboard services" if "dashboard" in self.__commands[self.__permission]:
+          self.cmd_dashboard_handlers("services")
+
+      case "dashboard start" if "dashboard" in self.__commands[self.__permission]:
+          self.cmd_dashboard_handlers("start")
+
+      case "dashboard stop" if "dashboard" in self.__commands[self.__permission]:
+          self.cmd_dashboard_handlers("stop")
+
+      case "dashboard refund" if "dashboard" in self.__commands[self.__permission]:
+          self.cmd_dashboard_handlers("refund")
+
+      case "tickets" if "tickets" in self.__commands[self.__permission]:
+          self.cmd_cart_handlers("show")
+
+      case "admincmd" if "admincmd" in self.__commands[self.__permission]:
+          print(f"{Fore.RED}type {Fore.WHITE}admincmd {Fore.CYAN}(ban,unban)")
+
+      case "admincmd ban" if "admincmd" in self.__commands[self.__permission]:
+          self.cmd_admincmd_handlers("ban")
+
+      case "admincmd unban" if "admincmd" in self.__commands[self.__permission]:
+          self.cmd_admincmd_handlers("unban")
+
+      case "balance" if "balance" in self.__commands[self.__permission]:
+          print(f"{Fore.RED}type {Fore.WHITE}balance {Fore.CYAN}(show,add)")
+
+      case "balance add" if "balance" in self.__commands[self.__permission]:
+          self.cmd_balance_handlers("add")
+
+      case "balance show" if "balance" in self.__commands[self.__permission]:
+          self.cmd_balance_handlers("show")
+
+      case "users" if "users" in self.__commands[self.__permission]:
+          print(f"{Fore.RED}type {Fore.WHITE}users {Fore.CYAN}(promote,demote)")
+
+      case "users promote" if "users" in self.__commands[self.__permission]:
+          self.cmd_users_handlers("promote")
+
+      case "users demote" if "users" in self.__commands[self.__permission]:
+          self.cmd_users_handlers("demote")
+
+      case "logs" if "logs" in self.__commands[self.__permission]:
+          self.cmd_logs_handlers()
+
+      case "orders" if "orders" in self.__commands[self.__permission]:
+          self.cmd_orders_handlers()
+
+      case _:
+          similar_word_process = similar_words_handler(self.command_entered, self.__commands[self.__permission])
+          if similar_word_process[0] and similar_word_process[2] > 50:
+              print(f"{Fore.BLUE}Assistant{Fore.CYAN}: do you mean {Fore.GREEN}{similar_word_process[1]} {Fore.CYAN}command?")
+          else:
+              print(f"{Fore.RED}there isn't any command like that")
+              print(f"{Fore.RED}type {Fore.WHITE}(help) {Fore.RED}to see other commands")
+
+
+
+  def cmd_orders_handlers(self,log):
+     pass
+    
+     
+  def cmd_logs_saves(self,log):
+    try:
+      if self.__permission != "guest":
+        date_now = datetime.now().strftime("%Y-%m-%d,%H:%M:%S")
+        log_file = read_json("logs")
+        if self.__account_id not in log_file:
+           log_file[self.__account_id] = {}
+        log_file[self.__account_id][date_now] = log
+        write_json("logs", log_file)
       else:
-        print(f"{Fore.RED} AuthSystem: signin failed!")
-      
-    elif "signup" == self.command_entered and "signup" in self.__commands[self.__permission]:
-      if self.auth_handler("signup"):
-        print(f"{Fore.RED} AuthSystem:{Fore.GREEN} signup success!, welcome {Fore.YELLOW + self.username}, please signin!")
-      else:
-        print(f"{Fore.RED} AuthSystem: signup failed!")
-      
-    elif "logout" == self.command_entered and "logout" in self.__commands[self.__permission]:
-      self.auth_handler("logout")
+         pass
+    except:
+      pass
 
-    elif "products" in self.command_entered:
-      self.cmd_products_handlers()
-
-    elif "cart" == self.command_entered and "cart" in self.__commands[self.__permission]:
-      print(f"{Fore.RED}type {Fore.WHITE}cart {Fore.CYAN}(add,remove,show,pay)")
-
-    elif "cart show" == self.command_entered and "cart" in self.__commands[self.__permission]:
-      self.cmd_cart_handlers("show")
-
-    elif "cart add" == self.command_entered and "cart" in self.__commands[self.__permission]:
-      self.cmd_cart_handlers("add")
-
-    elif "cart remove" == self.command_entered and "cart" in self.__commands[self.__permission]:
-      self.cmd_cart_handlers("remove")
-
-    elif "cart pay" == self.command_entered and "cart" in self.__commands[self.__permission]:
-      self.cmd_cart_handlers("pay")
-
-    elif "dashboard" == self.command_entered and "dashboard" in self.__commands[self.__permission]:
-      print(f"{Fore.RED}type {Fore.WHITE}dashboard {Fore.CYAN}(show,services,start,stop,refund)")
-
-    elif "dashboard show" == self.command_entered and "dashboard" in self.__commands[self.__permission]:
-      self.cmd_dashboard_handlers("show")
-
-    elif "dashboard services" == self.command_entered and "dashboard" in self.__commands[self.__permission]:
-      self.cmd_dashboard_handlers("services")
-
-    elif "dashboard start" == self.command_entered and "dashboard" in self.__commands[self.__permission]:
-      self.cmd_dashboard_handlers("start")
-
-    elif "dashboard stop" == self.command_entered and "dashboard" in self.__commands[self.__permission]:
-      self.cmd_dashboard_handlers("stop")
-
-    elif "dashboard refund" == self.command_entered and "dashboard" in self.__commands[self.__permission]:
-      self.cmd_dashboard_handlers("refund")
-
-    elif "tickets" == self.command_entered and "tickets" in self.__commands[self.__permission]:
-      self.cmd_cart_handlers("show")
-
-    elif "admincmd" == self.command_entered and "admincmd" in self.__commands[self.__permission]:
-      print(f"{Fore.RED}type {Fore.WHITE}admincmd {Fore.CYAN}(ban,unban)")
-
-    elif "admincmd ban" == self.command_entered and "admincmd" in self.__commands[self.__permission]:
-      self.cmd_admincmd_handlers("ban")
-    elif "admincmd unban" == self.command_entered and "admincmd" in self.__commands[self.__permission]:
-      self.cmd_admincmd_handlers("unban")
-
-
-    else:
-      similar_word_process = similar_words_handler(self.command_entered,self.__commands[self.__permission])
-      if similar_word_process[0] and similar_word_process[2] > 50:
-        print(f"{Fore.BLUE}Assistant{Fore.CYAN}: do you mean {Fore.GREEN}{similar_word_process[1]} {Fore.CYAN}command?")
-      else:
-        print(f"{Fore.RED}there isn't any command like that")
-        print(f"{Fore.RED}type {Fore.WHITE}(help) {Fore.RED}to see other commands")
+  def cmd_logs_handlers(self):
+    logs_file = read_json("logs")
+    if self.__permission != "administrator":
+      for date,log in logs_file[self.__account_id].items():
+         print(f"{Fore.YELLOW}#Log: {Fore.WHITE}Date: {date}, {Fore.RED}Comment: {log}.")
+  
+  def cmd_users_handlers(self,option):
+     users_data = read_json("accounts")
+     if option == "promote":
+        user_id = input("Enter user id to promote: ")
+        if user_id in users_data["users"]:
+          users_data["users"][user_id]["permission"] = 'administrator'
+          write_json("accounts", users_data)
+          print("+++ User has Promoted +++")
+          self.cmd_logs_saves(f"You promote {user_id}")
+        else:
+           print("there is no user like that")
+     elif option == "demote":
+        user_id = input("Enter user id to demote: ")
+        if user_id in users_data["users"]:
+          users_data["users"][user_id]["permission"] = 'customer'
+          write_json("accounts", users_data)
+          print("--- User has Demoted ---")
+          self.cmd_logs_saves(f"You demote {user_id}")
+        else:
+           print("there is no user like that")
+  
+  def cmd_balance_handlers(self,option):
+    read_account_data = read_json("accounts")
+    yourbalance = read_account_data["users"][self.__account_id]["balance"]
+    self.__balance = yourbalance
+    if option == "show":
+      self.cmd_logs_saves("You ask for showing your balance")
+      print("========================")
+      print(f"{Fore.GREEN} Your balance is: ${self.__balance}")
+      print("========================")
+    elif option == "add":
+      self.cmd_logs_saves("You ask for add amount to your wallet")
+      enter_balance_to_add = float(input(f"{Fore.YELLOW}Enter the amount: {Fore.GREEN}$"))
+      read_account_data["users"][self.__account_id]["balance"] += enter_balance_to_add
+      write_json("accounts",read_account_data)
 
   def cmd_admincmd_handlers(self,option):
     read_account = read_json("accounts")
@@ -119,8 +229,8 @@ class CliHandler():
         write_json("accounts",read_account)
 
   def cmd_dashboard_handlers(self,option):
-    dashboard_data1 = read_json("accounts")
-    servers_data1 = read_json("servers")
+    account_data = read_json("accounts")
+    server_data = read_json("servers")
     if option == "show":
       print(f"""
 ئ
@@ -130,16 +240,16 @@ class CliHandler():
 {Fore.CYAN}Welcome,  {Fore.WHITE}{self.username}
 {Fore.CYAN}Your ID:  {Fore.WHITE}{self.__account_id}
 {Fore.CYAN}Member since,  {Fore.WHITE}{self.date_of_create}
-{Fore.CYAN}Your Full Name: {Fore.WHITE}{dashboard_data1["users"][self.__account_id]["firstname"]}, {dashboard_data1["users"][self.__account_id]["lastname"]}
+{Fore.CYAN}Your Full Name: {Fore.WHITE}{account_data["users"][self.__account_id]["firstname"]}, {account_data["users"][self.__account_id]["lastname"]}
 {Fore.CYAN}Your Permission: {Fore.WHITE}{self.__permission}
 {Fore.CYAN}Your Email: {Fore.WHITE}{self.__email}
 {Fore.CYAN}Your Balance: {Fore.GREEN}${self.__balance}
 """
 )
     if option == "services":
-      if self.__account_id in servers_data1["VServers"]:
-        for service in servers_data1["VServers"][self.__account_id]:
-          data_short = servers_data1["VServers"][self.__account_id][service]
+      if self.__account_id in server_data["VServers"]:
+        for service in server_data["VServers"][self.__account_id]:
+          data_short = server_data["VServers"][self.__account_id][service]
           status = "Not Active"
           print()
           if data_short['status']:
@@ -166,6 +276,7 @@ class CliHandler():
       print("==================================")
       print(Fore.GREEN + f"Your Balance ${self.__balance}")
       print("==================================")
+      self.cmd_logs_saves("You showed your cart")
 
     elif option == 'add':
       cart_item = input(f"{Fore.GREEN}CartSystem: Enter item name to add: ")
@@ -180,6 +291,7 @@ class CliHandler():
                 self.cart[category] = {}
               if item_name in self.cart[category]:
                 self.cart[category][item_name]["quantity"] += 1
+                self.cmd_logs_saves("You added product from the cart")
               else:
                 self.cart[category][item_name] = {"price":item_info["price"],"quantity":1}
 
@@ -190,6 +302,7 @@ class CliHandler():
         if cart_item in self.cart[category]:
           if self.cart[category][cart_item]["quantity"] > 1:
             self.cart[category][cart_item]["quantity"] -= 1
+            self.cmd_logs_saves("You remove product from the cart")
           else:
             del self.cart[category][cart_item]
 
@@ -225,6 +338,7 @@ class CliHandler():
                     "status": True,
                     "price": products[product_name][name]["price"]
                   }
+                  self.cmd_logs_saves("You bought gameserver")
                 else:
                   servers["VServers"][self.__account_id][f"VServer#{last_server_number}"] = {
                     "type": name,
@@ -236,7 +350,14 @@ class CliHandler():
                     "status": True,
                     "price": products[product_name][name]["price"]
                   }
-
+                  self.cmd_logs_saves("You bought virtual server")
+          
+          read_account_data = read_json("accounts")
+          read_account_data["users"][self.__account_id]["balance"] -= self.cmd_get_cart_cost()
+          new_balance = read_account_data["users"][self.__account_id]["balance"]
+          self.cart = {}
+          self.__balance = new_balance
+          write_json("accounts",read_account_data)
           write_json("servers",servers)
         else:
           print(Fore.RED + "You dont have this amount!")
@@ -266,14 +387,17 @@ class CliHandler():
   def cmd_products_handlers(self):
     products_data = read_json("products")
     if "vps" in self.command_entered:
+      self.cmd_logs_saves("You visit the vps products")
       for vps in products_data["VPS"]:
         print(f"{Fore.CYAN}Plan: {vps}: Core: {products_data['VPS'][vps]['core']}, Memory: {products_data['VPS'][vps]['memory']}, Storage: {products_data['VPS'][vps]['storage']}GB, IP Address: {products_data['VPS'][vps]['ip_address']}, Price: ${products_data['VPS'][vps]['price']}.")
     elif "vds" in self.command_entered:
       for vds in products_data["VDS"]:
         print(f"{Fore.CYAN}Plan: {vds}: Core: {products_data['VDS'][vds]['core']}, Memory: {products_data['VDS'][vds]['memory']}, Storage: {products_data['VDS'][vds]['storage']}GB, IP Address: {products_data['VDS'][vds]['ip_address']}, Price: ${products_data['VDS'][vds]['price']}.")
+        self.cmd_logs_saves("You visit the vds products")
     elif "gameserver" in self.command_entered:
       for gameserver in products_data["GAMESERVER"]:
         print(f"{Fore.CYAN}Plan: {gameserver}: Players: {products_data['GAMESERVER'][gameserver]['players']} Memory: {products_data['GAMESERVER'][gameserver]['memory']}, Storage: {products_data['GAMESERVER'][gameserver]['storage']}GB, Price: ${products_data['GAMESERVER'][gameserver]['price']}.")
+        self.cmd_logs_saves("You visit the gameserver products")
 
     else:
       print(f"{Fore.RED}type {Fore.WHITE}products {Fore.CYAN}(vps,vds,gameserver)")
@@ -307,6 +431,7 @@ class CliHandler():
             self.__account_id = id
             self.date_of_create = data['users'][id]['dateofcreate']
             self.__balance = data['users'][id]['balance']
+            self.cmd_logs_saves("You signed in")
             return True
           else:
             print("something went wrong")
@@ -360,6 +485,7 @@ class CliHandler():
     elif authentecation_option == "logout":
       sure_confirm = input(f"{Fore.RED} AuthSystem: Are you sure! (y:yes n:no):{Fore.YELLOW} ")
       if sure_confirm == 'y':
+        self.cmd_logs_saves("You signed out")
         self.username = None
         self.firstname = None
         self.lastname = None
