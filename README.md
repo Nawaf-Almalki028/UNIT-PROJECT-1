@@ -1,45 +1,96 @@
-# UNIT-PROJECT-1
+Overview
+A command-line interface (CLI) application for managing a cloud hosting service, where users can:
+
+Browse and purchase virtual servers (VPS/VDS) and game servers.
+
+Manage their account, balance, and active services.
+
+Interact with support via a ticketing system.
+
+The system supports three user roles:
+
+Guest – Can browse products and sign up.
+
+Customer – Can purchase, manage services, and contact support.
+
+Administrator – Can manage users, ban/unban, and view logs.
+
+Features & User Stories
+As a Guest, I should be able to do the following commands:
+
+  Help- Available Commands:
+  -> Products: products tree commands
+       products vps
+       products vds
+       products gameserver
+  -> Cart: cart tree commands
+       cart show
+       cart add
+       cart remove
+  -> Signup: Create a new account
+  -> Signin: Sign in to your account
 
 
+As a Customer, I should be able to do the following commands:
 
-## Based on what you’ve learned until now , create a project of your choosing (impress us with your imagination) . This project must at least satisfy the following minimum requirements :
-
-- Must be interactive on CLI.
-- Use your coding skills in Python accurately.
-- Organize Your Code into modules & (or packages)
-- Use git & Github to track changes in your code.
-
-## Example Project :  An online Grocery Store :
-
-#### Overview : An online store that sells fruits to customers. This online store has 2 main users. The customer and the manager of the store . Each one of them should be able to do the following tasks for the store to function properly . 
-
-### Features & User Stories
-#### As a customer I should be able to do the following :
-- Browse  Products . 
-- View the product info (summary, specs, price, quantity , etc.)
-- Search for Products.
-- Get recommendations for my next purchase based on my purchase history.
-- Add Products to the shopping cart .
-- Remove a product from the shopping cart.
-- List the products in my shopping cart. 
-- Continue to checkout . 
-- Fill in my address for delivery.
-- Get receipt of my purchases.
-- Check delivery status . 
-
-
-
-#### Usage :
- Explain to the user how to use your project . 
- for example:
- - type in search product_name to search for a product.
- - type in list_products to show all the products in the grocery.
- - type in show product_name to get information about this product.
- - type in buy product_name to buy the product . 
- - and so on...
+  Help - Available Commands:
+  -> Dashboard: dashboard commands
+       dashboard show
+       dashboard services
+       dashboard start
+       dashboard stop
+  -> Products: products commands
+       products vps
+       products vds
+       products gameserver
+  -> Cart: cart commands
+       cart show
+       cart add
+       cart remove
+       cart pay
+  -> Tickets: ticket commands
+       tickets create
+       tickets show
+       tickets reply
+  -> Balance: balance commands
+       balance show
+       balance add
+  -> Logs: View your logs
+  -> Logout: Log out of your account
 
 
-### For your project. Edit this README.md file to include your own project name,  overview, user stories, and usage. 
+As a Administrator, I should be able to do the following commands:
 
-### NOTE: before submitting the final project, please do the following command:
-`pip freeze > requirements.txt` to enable use to know & use the packages used in your project.
+  Help - Available Commands:
+  -> AdminCMD: moderation commands
+       admincmd ban
+       admincmd unban
+  -> Dashboard: dashboard commands
+       dashboard show
+       dashboard services
+       dashboard start
+       dashboard stop
+  -> Products: products commands
+       products vps
+       products vds
+       products gameserver
+  -> Cart: cart commands
+       cart show
+       cart add
+       cart remove
+       cart pay
+  -> Users: user management
+       users promote
+       users demote
+  -> Logs: View customer or system logs
+  -> Tickets: ticket commands
+       tickets show
+       tickets reply
+       tickets close
+  -> Balance: balance commands
+       balance show
+       balance add
+  -> Logout: Log out of your account
+
+
+You can use (help) commands to understand more!

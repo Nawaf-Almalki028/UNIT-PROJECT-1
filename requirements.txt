@@ -1,0 +1,6 @@
+art==6.5
+colorama==0.4.6
+maskpass==0.3.7
+pynput==1.8.1
+RapidFuzz==3.13.0
+six==1.17.0
