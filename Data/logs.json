@@ -54,7 +54,10 @@
     "2025-07-02,02:08:59": "You signed in",
     "2025-07-02,02:09:01": "You typed this command: help",
     "2025-07-02,02:09:40": "You typed this command: ",
-    "2025-07-02,02:09:42": "You signed out"
+    "2025-07-02,02:09:42": "You signed out",
+    "2025-07-02,02:16:53": "You signed in",
+    "2025-07-02,02:16:55": "You typed this command: help",
+    "2025-07-02,02:16:59": "You typed this command: tickets reply"
   },
   "id_HT1": {
     "2025-07-01,14:06:20": "You typed this command: so",
