@@ -277,6 +277,7 @@ class CliHandler():
           print(f"{Fore.RED} Wrong Input! Error {ex} ")
         read_account_data["users"][self.__account_id]["balance"] += enter_balance_to_add
         write_json("accounts",read_account_data)
+        self.__balance = yourbalance
     except Exception as ex:
        print(f"{Fore.RED}Account data Error: {ex}")
 
