@@ -134,7 +134,7 @@ class CliHandler():
           self.cmd_logs_handlers()
 
       case "tickets" if "tickets" in self.__commands[self.__permission]:
-          print(f"{Fore.RED}type {Fore.WHITE}tickets {Fore.CYAN}(create,show,reply)")
+          print(f"{Fore.RED}type {Fore.WHITE}tickets {Fore.CYAN}(create,show)")
 
       case "tickets create" if "tickets" in self.__commands[self.__permission]:
           self.cmd_ticket_handlers("create")
