@@ -8,7 +8,7 @@ art.tprint("TQ Hosting")
 
 print(Fore.GREEN + """
 -------------------------------------------
-        you can use this cli as you like!
+            TQ Hosting CLI
 -------------------------------------------
 """)
 
