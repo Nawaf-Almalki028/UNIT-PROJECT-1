@@ -27,7 +27,7 @@ class CliHandler():
         "dashboard", "dashboard show", "dashboard services", "dashboard start", "dashboard stop",
         "products", "products vps", "products vds", "products gameserver",
         "cart", "cart show", "cart add", "cart remove", "cart pay",
-        "tickets", "tickets create", "tickets show", "tickets reply",
+        "tickets", "tickets create", "tickets show",
         "logs",
         "logout"
       ],
@@ -142,7 +142,7 @@ class CliHandler():
       case "tickets show" if "tickets" in self.__commands[self.__permission]:
           self.cmd_ticket_handlers("show")
 
-      case "tickets reply" if "tickets" in self.__commands[self.__permission]:
+      case "tickets reply" if "tickets reply" in self.__commands[self.__permission]:
           self.cmd_ticket_handlers("reply")
 
       case _:
@@ -169,7 +169,7 @@ class CliHandler():
             }
             write_json("tickets", read_tickets)
             print("Ticket created.")
-        elif option == "show":
+        elif option == "show" and self.__permission == "customer":
             if self.__account_id not in read_tickets:
                 print("No tickets found.")
             else:
@@ -178,6 +178,17 @@ class CliHandler():
                     print(f"Title: {data['title']}")
                     print(f"Message: {data['message']}")
                     print(f"Reply: {data['reply'] or 'No reply'}\n")
+        elif option == "show" and self.__permission == "administrator":
+           for account_id,info in read_tickets.items():
+              for ticket_id in info:
+                print(f"{Fore.WHITE}Account ID: {account_id} , {Fore.CYAN}Ticket ID: {ticket_id} {Fore.GREEN}, Title: {read_tickets[account_id][ticket_id]['title']}, {Fore.YELLOW}Message: {read_tickets[account_id][ticket_id]['message']}, {Fore.RED}Reply: {read_tickets[account_id][ticket_id]['reply']}")
+              # for ticket_id in read_tickets[account_id].items():
+                # print(f"Account ID: {account_id}, Ticket ID: {ticket_id}, Title: {data}")
+                # for ticket_id, data in read_tickets[self.__account_id].items():
+                #     print(f"ID: {ticket_id}")
+                #     print(f"Title: {data['title']}")
+                #     print(f"Message: {data['message']}")
+                #     print(f"Reply: {data['reply'] or 'No reply'}\n")
         elif option == "reply":
             user_id = input("enter the user id: ")
             if user_id not in read_tickets:

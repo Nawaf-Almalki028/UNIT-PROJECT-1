@@ -2,11 +2,11 @@
   "Dedicateds": {
     "Dedicated_01": {
       "location": "EU",
-      "core": 30,
+      "core": 28,
       "threads": 64,
-      "memory": 252,
-      "storage": 4046,
-      "ip_addresses": 15
+      "memory": 248,
+      "storage": 3996,
+      "ip_addresses": 14
     }
   },
   "VServers": {
@@ -21,6 +21,29 @@
         "date": "2025-07-01,21:24:53",
         "status": true,
         "price": 7.0
+      }
+    },
+    "id_HT3": {
+      "VServer#2": {
+        "type": "VPS-S",
+        "location": "EU",
+        "core": 2,
+        "memory": 4,
+        "storage": 50,
+        "ip_addresses": 1,
+        "date": "2025-07-02,19:59:48",
+        "status": false,
+        "price": 7.0
+      },
+      "VServer#3": {
+        "type": "GAMESERVER-L",
+        "location": "EU",
+        "players": 32,
+        "memory": 6,
+        "storage": 40,
+        "date": "2025-07-02,19:59:48",
+        "status": true,
+        "price": 7.99
       }
     }
   }
