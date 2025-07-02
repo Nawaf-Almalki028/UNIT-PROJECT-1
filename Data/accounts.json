@@ -1,5 +1,25 @@
 {
   "users": {
+    "id_HT4": {
+      "username": "admin",
+      "firstname": "admin",
+      "lastname": "",
+      "permission": "admin",
+      "dateofcreate": "2025-06-30,10:03:56",
+      "balance": 0.02,
+      "password": "8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414",
+      "email": "admin@gmail.com"
+    },
+    "id_HT3": {
+      "username": "customer",
+      "firstname": "customer",
+      "lastname": "",
+      "permission": "customer",
+      "dateofcreate": "2025-06-30,10:03:56",
+      "balance": 0.01,
+      "password": "8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414",
+      "email": "customer@gmail.com"
+    },
     "id_HT2": {
       "username": "nawaf12",
       "firstname": "nawaf",

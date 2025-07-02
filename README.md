@@ -94,3 +94,13 @@ As a Administrator, I should be able to do the following commands:
 
 
 You can use (help) commands to understand more!
+
+accounts already to use:
+
+customer permission
+  name: customer
+  password: 1234567
+
+administrator permission
+  name: admin
+  password: 1234567
